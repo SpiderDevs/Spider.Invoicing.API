@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  spider.invoicing.api:
+    image: spider.invoicing.api
+    build:
+      context: ./Spider.Invoicing.API
+      dockerfile: Dockerfile
