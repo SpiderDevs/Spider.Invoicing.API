@@ -12,6 +12,7 @@ using Spider.Invoicing.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Spider.Invoicing.API.Handlers.GetInvoices;
 using Spider.Invoicing.API.Database.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Spider.Invoicing.API
 {
@@ -30,6 +31,19 @@ namespace Spider.Invoicing.API
             services.AddDbContext<InvoicingContext>(options =>
                  options.UseInMemoryDatabase("Test_InvoicingDb"));
 
+            services.AddMvcCore()
+                  .AddAuthorization()
+                  .AddJsonFormatters();
+
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //services.AddAuthentication("Bearer")
+            //.AddIdentityServerAuthentication(options =>
+            //{
+            //    options.Authority = "http://localhost:44318";
+            //    options.RequireHttpsMetadata = false;
+
+            //    options.ApiName = "api1";
+            //});
             //TODO: Add autofac
             services.AddTransient<GetInvoicesQueryHandler, GetInvoicesQueryHandler>();
 
@@ -41,7 +55,44 @@ namespace Spider.Invoicing.API
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
-            services.AddMvc();
+
+
+            services.AddAuthentication("Bearer")
+           .AddIdentityServerAuthentication(options =>
+           {
+               options.Authority = "http://localhost:44318";
+               options.RequireHttpsMetadata = false;
+
+               options.ApiSecret = "secret";
+               options.ApiName = "customAPI";
+           });
+
+            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultScheme = "Cookies";
+            //    options.DefaultChallengeScheme = "oidc";
+            //})
+            //       .AddCookie("Cookies")
+            //       .AddOpenIdConnect("oidc", options =>
+            //       {
+            //           options.SignInScheme = "Cookies";
+
+            //           options.Authority = "http://localhost:44318";
+            //           options.RequireHttpsMetadata = false;
+
+            //           options.ClientId = "angularclientidtokenonly";
+            //           options.ClientSecret = "secret";
+            //           options.ResponseType = "code id_token";
+
+            //           options.SaveTokens = true;
+            //           options.GetClaimsFromUserInfoEndpoint = true;
+
+            //           options.Scope.Add("api1");
+            //       });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,8 +105,9 @@ namespace Spider.Invoicing.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
             app.UseMvc();
-            
+
 
             //TODO: only for tests
             InitDbTestData(dbContext);
@@ -95,6 +147,37 @@ namespace Spider.Invoicing.API
             dbContext.Invoices.AddRange(fakeInvoices);
             dbContext.SaveChanges();
         }
+
+        //public static IEnumerable<ApiResource> GetApiResources()
+        //{
+        //    return new List<ApiResource>
+        //    {
+        //        new ApiResource("api1", "My API")
+        //    };
+        //}
+
+        //public static IEnumerable<Client> GetClients()
+        //{
+        //    return new List<Client>
+        //    {
+        //        new Client
+        //        {
+        //            ClientId = "oauthClient",
+
+        //            // no interactive user, use the clientid/secret for authentication
+        //            AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+        //            // secret for authentication
+        //            ClientSecrets =
+        //            {
+        //                new Secret("superSecretPassword".Sha256())
+        //            },
+
+        //            // scopes that client has access to
+        //            AllowedScopes = { "customAPI.read" }
+        //        }
+        //    };
+        //}
 
 
     }

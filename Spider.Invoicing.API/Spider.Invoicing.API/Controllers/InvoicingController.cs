@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Spider.Invoicing.API.Controllers.Common;
 using Spider.Invoicing.API.Handlers.GetInvoices;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace Spider.Invoicing.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class InvoicingController : ApiController
     {
         private readonly GetInvoicesQueryHandler handler;
