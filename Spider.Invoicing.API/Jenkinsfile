@@ -1,13 +1,17 @@
 pipeline {
     agent any 
-
+	environment{
+		APP_FOLDER='Spider.Invoicing.API'
+	}
     stages {
         stage('Build') { 
               when {
                 branch "uat"
             }    
             steps { 
-                sh 'bash Spider.Invoicing.API/build.sh' 
+				dir(APP_FOLDER){
+					sh 'bash build.sh' 
+				}
             }
         }
         stage('Start') {
@@ -15,7 +19,9 @@ pipeline {
                 branch "uat"
             }  
             steps {
-                sh 'bash Spider.Invoicing.API/start.sh'
+				dir(APP_FOLDER){
+					sh 'bash start.sh'
+				}
             }
         }
     }
