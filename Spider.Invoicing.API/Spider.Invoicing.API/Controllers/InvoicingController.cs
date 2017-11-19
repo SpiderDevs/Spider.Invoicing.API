@@ -25,6 +25,7 @@ namespace Spider.Invoicing.API.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
+        [HttpGet]
         public IActionResult Get(GetInvoicesQuery query)
         {
             return Response(handler.Handle(query));

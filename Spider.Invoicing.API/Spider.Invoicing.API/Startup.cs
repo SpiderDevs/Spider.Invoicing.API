@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Spider.Invoicing.API.Handlers.GetInvoices;
 using Spider.Invoicing.API.Database.Models;
 using System.IdentityModel.Tokens.Jwt;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
 
 namespace Spider.Invoicing.API
 {
@@ -33,7 +36,8 @@ namespace Spider.Invoicing.API
 
             services.AddMvcCore()
                   .AddAuthorization()
-                  .AddJsonFormatters();
+                  .AddJsonFormatters()
+                  .AddApiExplorer();
 
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             //services.AddAuthentication("Bearer")
@@ -66,6 +70,14 @@ namespace Spider.Invoicing.API
                options.ApiSecret = "secret";
                options.ApiName = "customAPI";
            });
+
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Spider invoicing API", Version = "v1" });
+                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Spider.Invoicing.API.xml");
+                c.IncludeXmlComments(filePath);
+            });
 
             // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -107,6 +119,15 @@ namespace Spider.Invoicing.API
 
             app.UseAuthentication();
             app.UseMvc();
+
+
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spider invoicing API v1");
+            });
 
 
             //TODO: only for tests
