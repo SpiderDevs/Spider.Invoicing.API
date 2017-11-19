@@ -1,7 +1,7 @@
 #!/bin/bash
 imageName="spider-invoicing-api";
 echo $imageName
-docker stop $imageName && docker rmi $imageName
+docker stop $imageName || true && docker rm -f $imageName || true
 
 BASE_DIR=`pwd`
 
