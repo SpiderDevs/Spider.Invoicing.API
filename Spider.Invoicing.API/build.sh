@@ -1,3 +1,4 @@
 #!/bin/bash
-docker rmi -f spider-invoicing-api
-docker image  build . --tag spider-invoicing-api 
+imageName="spider-invoicing-api";
+docker stop $imageName || true && docker rmi -f $imageName || true
+docker image  build . --tag $imageName
