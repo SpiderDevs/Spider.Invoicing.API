@@ -1,0 +1,22 @@
+pipeline {
+    agent any 
+
+    stages {
+        stage('Build') { 
+              when {
+                branch "uat"
+            }    
+            steps { 
+                sh 'bash build.sh' 
+            }
+        }
+        stage('Start') {
+              when {
+                branch "uat"
+            }  
+            steps {
+                sh 'bash start.sh'
+            }
+        }
+    }
+}
