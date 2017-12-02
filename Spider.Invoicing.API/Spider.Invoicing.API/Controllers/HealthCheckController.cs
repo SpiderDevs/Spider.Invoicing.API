@@ -13,7 +13,7 @@ namespace Spider.Invoicing.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Ok");
+            return Ok("Ok. Api version 0.0.1");
         }
     }
 }
