@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
+using Serilog;
 
 namespace Spider.Invoicing.API
 {
@@ -31,6 +32,10 @@ namespace Spider.Invoicing.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(loggingBuilder =>
+                loggingBuilder.AddSerilog(dispose: true)
+                    .AddFile("Logs/spider-invoicing-api-{Date}.txt", isJson: true));
+
             services.AddDbContext<InvoicingContext>(options =>
                  options.UseInMemoryDatabase("Test_InvoicingDb"));
 
