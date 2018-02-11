@@ -15,6 +15,6 @@ fi
 
 docker run  -d --name $imageName \
 	-p 15030:80 \
-	--mount source=logs-volume,target=/app \
+	--mount source=logs-volume,target=/app/Logs \
 	--restart always \
 	$imageName
