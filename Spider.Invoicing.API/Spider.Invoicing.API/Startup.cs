@@ -17,6 +17,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
 using Serilog;
+using Spider.Invoicing.API.Models;
 
 namespace Spider.Invoicing.API
 {
@@ -65,11 +66,13 @@ namespace Spider.Invoicing.API
                     .AllowCredentials());
             });
 
+            var domainSettings = new DomainSettings();
+            Configuration.GetSection("DomainSettings").Bind(domainSettings);
 
             services.AddAuthentication("Bearer")
            .AddIdentityServerAuthentication(options =>
            {
-               options.Authority = "http://localhost:44318";
+               options.Authority = domainSettings.IdentityServer;
                options.RequireHttpsMetadata = false;
 
                options.ApiSecret = "secret";

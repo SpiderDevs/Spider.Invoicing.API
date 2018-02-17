@@ -8,6 +8,6 @@ namespace Spider.Invoicing.API.Models
     public class DomainSettings
     {
         public string InvoicingWebClientUrl { get; set; }
-        public string InvoicingApiUrl { get; set; }
+        public string IdentityServer { get; set; }
     }
 }
