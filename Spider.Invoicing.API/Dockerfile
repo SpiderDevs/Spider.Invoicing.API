@@ -9,5 +9,6 @@ FROM microsoft/aspnetcore
 WORKDIR /app
 COPY --from=builder /app/TestsResults ./TestsResults/
 COPY --from=builder /app/Release .
+ENV ASPNETCORE_ENVIRONMENT=Uat
 EXPOSE 80
 ENTRYPOINT ["dotnet", "Spider.Invoicing.API.dll"]
