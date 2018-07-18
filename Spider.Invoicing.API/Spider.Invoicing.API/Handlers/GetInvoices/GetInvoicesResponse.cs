@@ -6,19 +6,8 @@ using System.Threading.Tasks;
 
 namespace Spider.Invoicing.API.Handlers.GetInvoices
 {
-    public class GetInvoicesResponse : ResponseBase
+    public class GetInvoicesResponse : ResponseBase<List<Invoice>>
     {
-        internal List<Invoice> Invoices
-        {
-            get
-            {
-                return (List<Invoice>)Result;
-            }
-            set
-            {
-                Result = value;
-            }
-        }
         public int TotalPages { get; set; }
         public int TotalCount { get; set; }
         public int Count { get; set; }

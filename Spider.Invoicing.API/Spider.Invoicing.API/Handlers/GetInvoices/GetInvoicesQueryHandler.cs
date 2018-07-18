@@ -36,7 +36,7 @@ namespace Spider.Invoicing.API.Handlers.GetInvoices
             var response = new GetInvoicesResponse()
             {
                 Count = invoices.Count(),
-                Invoices = invoices,
+                Result = invoices,
                 Page = query.Page,
                 TotalCount = invoices.Count,
                 TotalPages = invoices.Count / perPage,

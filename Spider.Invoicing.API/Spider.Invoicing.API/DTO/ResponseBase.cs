@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Spider.Invoicing.API.DTO
 {
-    public abstract class ResponseBase
+    public abstract class ResponseBase<T>
     {
         public bool IsSuccess { get; set; }
         public Error Error { get; set; }
-        public object Result { get; set; }
+        public T Result { get; set; }
     }
 
 

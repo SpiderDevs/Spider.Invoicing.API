@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Spider.Invoicing.API.DTO
 {
-    public class SuccessResponse :ResponseBase
+    public class SuccessResponse :ResponseBase<string>
     {
         public SuccessResponse()
         {
