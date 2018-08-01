@@ -6,7 +6,7 @@ namespace Spider.Invoicing.API.DTO
 {
     public class Invoice
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string InvoiceNumber { get; set; }
         public DateTime CreatedAt { get; set; }
         public Decimal GrossAmmount { get; set; }

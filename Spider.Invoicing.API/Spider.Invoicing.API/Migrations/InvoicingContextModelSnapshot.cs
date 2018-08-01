@@ -22,7 +22,7 @@ namespace Spider.Invoicing.API.Migrations
 
             modelBuilder.Entity("Spider.Invoicing.API.Database.Models.Invoice", b =>
                 {
-                    b.Property<int>("InvoiceId")
+                    b.Property<Guid>("InvoiceId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreatedAt");

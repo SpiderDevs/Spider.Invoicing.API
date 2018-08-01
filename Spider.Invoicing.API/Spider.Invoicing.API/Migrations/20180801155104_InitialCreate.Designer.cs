@@ -11,7 +11,7 @@ using System;
 namespace Spider.Invoicing.API.Migrations
 {
     [DbContext(typeof(InvoicingContext))]
-    [Migration("20180801133807_InitialCreate")]
+    [Migration("20180801155104_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,7 +23,7 @@ namespace Spider.Invoicing.API.Migrations
 
             modelBuilder.Entity("Spider.Invoicing.API.Database.Models.Invoice", b =>
                 {
-                    b.Property<int>("InvoiceId")
+                    b.Property<Guid>("InvoiceId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreatedAt");

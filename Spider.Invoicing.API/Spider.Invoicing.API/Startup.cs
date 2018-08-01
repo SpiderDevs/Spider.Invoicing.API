@@ -117,6 +117,14 @@ namespace Spider.Invoicing.API
                 {
                     new Invoice()
                     {
+                        CreatedAt = DateTime.Now.AddDays(-3),
+                        GrossAmmount =1234.12m,
+                        InvoiceNumber = "241/04/2017/PKS",
+                        NetAmount = 2312.3m,
+                        VatAmount = 327.1m,
+                    },
+                    new Invoice()
+                    {
                         CreatedAt = DateTime.Now.AddDays(-2),
                         GrossAmmount = 100,
                         InvoiceNumber = "241/04/2017/PKS",
@@ -138,7 +146,7 @@ namespace Spider.Invoicing.API
                         InvoiceNumber = "241/04/2017/PKS",
                         NetAmount = 58,
                         VatAmount = 7,
-                    },
+                    }
                 };
 
                 dbContext.Invoices.AddRange(fakeInvoices);
