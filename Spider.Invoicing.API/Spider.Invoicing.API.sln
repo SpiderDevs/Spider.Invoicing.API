@@ -37,6 +37,10 @@ Global
 		{7E797A60-9C17-4DD1-9C49-E97D00A64FAB} = {3CFC1CBB-A316-46D4-80E0-26EEB1D232E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		BuildVersion_BuildVersioningStyle = None.None.Increment.Increment
+		BuildVersion_UpdateFileVersion = True
+		BuildVersion_UpdateAssemblyVersion = True
+		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {345ECC9C-31FF-4632-8DC2-C40E360DC6C1}
 	EndGlobalSection
 EndGlobal

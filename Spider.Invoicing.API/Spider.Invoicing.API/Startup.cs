@@ -94,8 +94,7 @@ namespace Spider.Invoicing.API
 
             app.UseAuthentication();
             app.UseMvc();
-
-
+            
             app.UseSwagger();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
@@ -147,37 +146,7 @@ namespace Spider.Invoicing.API
             }
         }
 
-        //public static IEnumerable<ApiResource> GetApiResources()
-        //{
-        //    return new List<ApiResource>
-        //    {
-        //        new ApiResource("api1", "My API")
-        //    };
-        //}
-
-        //public static IEnumerable<Client> GetClients()
-        //{
-        //    return new List<Client>
-        //    {
-        //        new Client
-        //        {
-        //            ClientId = "oauthClient",
-
-        //            // no interactive user, use the clientid/secret for authentication
-        //            AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-        //            // secret for authentication
-        //            ClientSecrets =
-        //            {
-        //                new Secret("superSecretPassword".Sha256())
-        //            },
-
-        //            // scopes that client has access to
-        //            AllowedScopes = { "customAPI.read" }
-        //        }
-        //    };
-        //}
-
+       
 
     }
 }

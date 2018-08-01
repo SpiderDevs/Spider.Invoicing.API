@@ -21,8 +21,11 @@ namespace Spider.Invoicing.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            log.LogInformation("Called Health Check. Api version 0.0.1");
-            return Ok("Ok. Api version 0.0.1");
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            string displayableVersion = $"{version}";
+
+            log.LogInformation($"Called Health Check. Api version {displayableVersion}");
+            return Ok($"Ok. Api version {displayableVersion}");
         }
     }
 }
