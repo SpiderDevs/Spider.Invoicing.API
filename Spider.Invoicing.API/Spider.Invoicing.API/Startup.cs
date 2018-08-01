@@ -37,24 +37,14 @@ namespace Spider.Invoicing.API
                 loggingBuilder.AddSerilog(dispose: true)
                     .AddFile("Logs/spider-invoicing-api-{Date}.txt", isJson: true));
 
-            services.AddDbContext<InvoicingContext>(options =>
-                 options.UseInMemoryDatabase("Test_InvoicingDb"));
-
             services.AddMvcCore()
                   .AddAuthorization()
                   .AddJsonFormatters()
                   .AddApiExplorer();
 
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            //services.AddAuthentication("Bearer")
-            //.AddIdentityServerAuthentication(options =>
-            //{
-            //    options.Authority = "http://localhost:44318";
-            //    options.RequireHttpsMetadata = false;
+            services.AddDbContext<InvoicingContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("InvoicingConnection")));
 
-            //    options.ApiName = "api1";
-            //});
-            //TODO: Add autofac
             services.AddTransient<GetInvoicesQueryHandler, GetInvoicesQueryHandler>();
 
             services.AddCors(options =>
@@ -66,19 +56,7 @@ namespace Spider.Invoicing.API
                     .AllowCredentials());
             });
 
-            var domainSettings = new DomainSettings();
-            Configuration.GetSection("DomainSettings").Bind(domainSettings);
-
-            services.AddAuthentication("Bearer")
-           .AddIdentityServerAuthentication(options =>
-           {
-               options.Authority = domainSettings.IdentityServer;
-               options.RequireHttpsMetadata = false;
-
-               options.ApiSecret = "secret";
-               options.ApiName = "customAPI";
-           });
-
+            SetAuthenticationMethod(services);
 
             services.AddSwaggerGen(c =>
             {
@@ -86,33 +64,22 @@ namespace Spider.Invoicing.API
                 var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Spider.Invoicing.API.xml");
                 c.IncludeXmlComments(filePath);
             });
+        }
 
-            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        private void SetAuthenticationMethod(IServiceCollection services)
+        {
+            var domainSettings = new DomainSettings();
+            Configuration.GetSection("DomainSettings").Bind(domainSettings);
 
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = domainSettings.IdentityServer;
+                    options.RequireHttpsMetadata = false;
 
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultScheme = "Cookies";
-            //    options.DefaultChallengeScheme = "oidc";
-            //})
-            //       .AddCookie("Cookies")
-            //       .AddOpenIdConnect("oidc", options =>
-            //       {
-            //           options.SignInScheme = "Cookies";
-
-            //           options.Authority = "http://localhost:44318";
-            //           options.RequireHttpsMetadata = false;
-
-            //           options.ClientId = "angularclientidtokenonly";
-            //           options.ClientSecret = "secret";
-            //           options.ResponseType = "code id_token";
-
-            //           options.SaveTokens = true;
-            //           options.GetClaimsFromUserInfoEndpoint = true;
-
-            //           options.Scope.Add("api1");
-            //       });
+                    options.ApiSecret = "secret";
+                    options.ApiName = "customAPI";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -137,7 +104,7 @@ namespace Spider.Invoicing.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spider invoicing API v1");
             });
 
-
+            dbContext.Database.Migrate();
             //TODO: only for tests
             InitDbTestData(dbContext);
         }
@@ -145,36 +112,39 @@ namespace Spider.Invoicing.API
 
         private void InitDbTestData(InvoicingContext dbContext)
         {
-            var fakeInvoices = new List<Invoice>()
+            if (!dbContext.Invoices.Any())
             {
-                new Invoice()
+                var fakeInvoices = new List<Invoice>()
                 {
-                    CreatedAt = DateTime.Now.AddDays(-2),
-                    GrossAmmount = 100,
-                    InvoiceNumber = "241/04/2017/PKS",
-                    NetAmount = 81,
-                    VatAmount = 19,
-                },
-                 new Invoice()
-                {
-                    CreatedAt = DateTime.Now.AddDays(-1),
-                    GrossAmmount = 120,
-                    InvoiceNumber = "242/04/2017/PKS",
-                    NetAmount = 98,
-                    VatAmount = 22,
-                },
-                  new Invoice()
-                {
-                    CreatedAt = DateTime.Now.AddDays(0),
-                    GrossAmmount = 65,
-                    InvoiceNumber = "241/04/2017/PKS",
-                    NetAmount = 58,
-                    VatAmount = 7,
-                },
-            };
+                    new Invoice()
+                    {
+                        CreatedAt = DateTime.Now.AddDays(-2),
+                        GrossAmmount = 100,
+                        InvoiceNumber = "241/04/2017/PKS",
+                        NetAmount = 81,
+                        VatAmount = 19,
+                    },
+                    new Invoice()
+                    {
+                        CreatedAt = DateTime.Now.AddDays(-1),
+                        GrossAmmount = 120,
+                        InvoiceNumber = "242/04/2017/PKS",
+                        NetAmount = 98,
+                        VatAmount = 22,
+                    },
+                    new Invoice()
+                    {
+                        CreatedAt = DateTime.Now.AddDays(0),
+                        GrossAmmount = 65,
+                        InvoiceNumber = "241/04/2017/PKS",
+                        NetAmount = 58,
+                        VatAmount = 7,
+                    },
+                };
 
-            dbContext.Invoices.AddRange(fakeInvoices);
-            dbContext.SaveChanges();
+                dbContext.Invoices.AddRange(fakeInvoices);
+                dbContext.SaveChanges();
+            }
         }
 
         //public static IEnumerable<ApiResource> GetApiResources()
