@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Spider.Invoicing.API.Handlers.Interfaces;
 
-namespace Spider.Invoicing.API.Handlers.GetInvoices
+namespace Spider.Invoicing.API.Handlers.Invoice.Queries.GetInvoices
 {
-    public class GetInvoicesQueryHandler
+    public class GetInvoicesQueryHandler : IQueryHandler<GetInvoicesQuery>
     {
         private const int DEFAULT_ELEMENTS_PER_PAGE = 25;
 
@@ -18,7 +19,7 @@ namespace Spider.Invoicing.API.Handlers.GetInvoices
             this.dbContext = dbContext;
         }
 
-        public GetInvoicesResponse Handle(GetInvoicesQuery query)
+        public async Task<IResponse> Handle(GetInvoicesQuery query)
         {
             var perPage = query.PerPage<1 ? DEFAULT_ELEMENTS_PER_PAGE : query.PerPage;
 
@@ -44,5 +45,6 @@ namespace Spider.Invoicing.API.Handlers.GetInvoices
             };
             return response;
         }
+
     }
 }

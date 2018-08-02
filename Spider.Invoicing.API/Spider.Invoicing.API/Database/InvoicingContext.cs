@@ -14,5 +14,6 @@ namespace Spider.Invoicing.API.Database
         { }
 
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceTemporary> TemporaryInvoices { get; set; }
     }
 }

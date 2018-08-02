@@ -11,9 +11,10 @@ using System;
 namespace Spider.Invoicing.API.Migrations
 {
     [DbContext(typeof(InvoicingContext))]
-    partial class InvoicingContextModelSnapshot : ModelSnapshot
+    [Migration("20180802142415_TemporatyInvoice")]
+    partial class TemporatyInvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

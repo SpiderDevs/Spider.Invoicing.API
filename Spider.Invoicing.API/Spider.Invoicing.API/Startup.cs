@@ -10,25 +10,30 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spider.Invoicing.API.Database;
 using Microsoft.EntityFrameworkCore;
-using Spider.Invoicing.API.Handlers.GetInvoices;
-using Spider.Invoicing.API.Database.Models;
 using System.IdentityModel.Tokens.Jwt;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Serilog;
+using Spider.Invoicing.API.Handlers.Invoice.Commands.CreateNewInvoice;
+using Spider.Invoicing.API.Handlers.Invoice.Queries.GetInvoices;
 using Spider.Invoicing.API.Models;
+using Invoice = Spider.Invoicing.API.Database.Models.Invoice;
 
 namespace Spider.Invoicing.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        private readonly IHostingEnvironment env;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -37,15 +42,28 @@ namespace Spider.Invoicing.API
                 loggingBuilder.AddSerilog(dispose: true)
                     .AddFile("Logs/spider-invoicing-api-{Date}.txt", isJson: true));
 
-            services.AddMvcCore()
-                  .AddAuthorization()
-                  .AddJsonFormatters()
-                  .AddApiExplorer();
+            if (env.IsDevelopment())
+            {
+                services.AddMvcCore(opts =>
+                {
+                    opts.Filters.Add(new AllowAnonymousFilter());
+                }).AddJsonFormatters()
+                    .AddApiExplorer();
+            }
+            else
+            {
+                services.AddMvcCore()
+                    .AddAuthorization()
+                    .AddJsonFormatters()
+                    .AddApiExplorer();
+            }
+
 
             services.AddDbContext<InvoicingContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("InvoicingConnection")));
 
             services.AddTransient<GetInvoicesQueryHandler, GetInvoicesQueryHandler>();
+            services.AddTransient<CreateNewInvoiceCommandHandler, CreateNewInvoiceCommandHandler>();
 
             services.AddCors(options =>
             {
@@ -56,8 +74,10 @@ namespace Spider.Invoicing.API
                     .AllowCredentials());
             });
 
-            SetAuthenticationMethod(services);
-
+            if (!env.IsDevelopment())
+            {
+                SetAuthenticationMethod(services);
+            }
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Spider invoicing API", Version = "v1" });
@@ -92,9 +112,16 @@ namespace Spider.Invoicing.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAuthentication();
-            app.UseMvc();
-            
+            if (env.IsDevelopment())
+            {
+                app.UseMvc();
+            }
+            else
+            {
+                app.UseAuthentication();
+                app.UseMvc();
+            }
+
             app.UseSwagger();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
@@ -154,7 +181,7 @@ namespace Spider.Invoicing.API
             }
         }
 
-       
+
 
     }
 }

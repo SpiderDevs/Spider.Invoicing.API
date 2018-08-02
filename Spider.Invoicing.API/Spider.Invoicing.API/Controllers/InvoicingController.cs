@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Spider.Invoicing.API.Controllers.Common;
-using Spider.Invoicing.API.Handlers.GetInvoices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Spider.Invoicing.API.Handlers.Invoice.Commands.CreateNewInvoice;
+using Spider.Invoicing.API.Handlers.Invoice.Queries.GetInvoices;
 
 namespace Spider.Invoicing.API.Controllers
 {
@@ -13,11 +14,13 @@ namespace Spider.Invoicing.API.Controllers
     [Authorize]
     public class InvoicingController : ApiController
     {
-        private readonly GetInvoicesQueryHandler handler;
+        private readonly GetInvoicesQueryHandler getInvoicesQueryHandler;
+        private readonly CreateNewInvoiceCommandHandler createNewInvoiceCommandHandlerhandler;
 
-        public InvoicingController(GetInvoicesQueryHandler handler)
+        public InvoicingController(GetInvoicesQueryHandler getInvoicesQueryHandler, CreateNewInvoiceCommandHandler createNewInvoiceCommandHandlerhandler)
         {
-            this.handler = handler;
+            this.getInvoicesQueryHandler = getInvoicesQueryHandler;
+            this.createNewInvoiceCommandHandlerhandler = createNewInvoiceCommandHandlerhandler;
         }
 
         /// <summary>
@@ -26,9 +29,20 @@ namespace Spider.Invoicing.API.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get(GetInvoicesQuery query)
+        public async Task<IActionResult> Get(GetInvoicesQuery query)
         {
-            return Response(handler.Handle(query));
+            return Response(await getInvoicesQueryHandler.Handle(query));
+        }
+
+        /// <summary>
+        /// Returm invoices
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/new")]
+        public async Task<IActionResult> Get(CreateNewInvoiceCommand command)
+        {
+            return Response(await createNewInvoiceCommandHandlerhandler.Handle(command));
         }
     }
 }

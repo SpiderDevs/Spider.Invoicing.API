@@ -11,7 +11,7 @@ namespace Spider.Invoicing.API.Controllers.Common
 {
     public class ApiController : Controller
     {        
-        internal IActionResult Response<T>(ResponseBase<T> response)
+        internal IActionResult Response(IResponse response)
         {
             if(response.IsSuccess)
             {
