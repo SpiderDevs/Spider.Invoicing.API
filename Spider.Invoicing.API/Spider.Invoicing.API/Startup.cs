@@ -47,8 +47,9 @@ namespace Spider.Invoicing.API
                 services.AddMvcCore(opts =>
                 {
                     opts.Filters.Add(new AllowAnonymousFilter());
-                }).AddJsonFormatters()
-                    .AddApiExplorer();
+                })
+                        .AddJsonFormatters()
+                        .AddApiExplorer();
             }
             else
             {
@@ -83,6 +84,7 @@ namespace Spider.Invoicing.API
                 c.SwaggerDoc("v1", new Info { Title = "Spider invoicing API", Version = "v1" });
                 var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Spider.Invoicing.API.xml");
                 c.IncludeXmlComments(filePath);
+                c.CustomSchemaIds(x => x.FullName);
             });
         }
 

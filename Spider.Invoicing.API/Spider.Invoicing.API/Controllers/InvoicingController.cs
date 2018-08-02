@@ -29,18 +29,18 @@ namespace Spider.Invoicing.API.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> Get(GetInvoicesQuery query)
+        public async Task<ActionResult<GetInvoicesResponse>> Get(GetInvoicesQuery query)
         {
             return Response(await getInvoicesQueryHandler.Handle(query));
         }
 
         /// <summary>
-        /// Returm invoices
+        /// Create nev invoice
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("/new")]
-        public async Task<IActionResult> Get(CreateNewInvoiceCommand command)
+        public async Task<ActionResult<CreateNewInvoiceCommandResponse>> NewInvoice(CreateNewInvoiceCommand command)
         {
             return Response(await createNewInvoiceCommandHandlerhandler.Handle(command));
         }
