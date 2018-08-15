@@ -8,5 +8,6 @@ namespace Spider.Invoicing.API.Handlers.Invoice.Commands.CreateNewInvoice
 {
     public class CreateNewInvoiceCommand : ICommand
     {
+        public Guid? Id { get; set; }
     }
 }
